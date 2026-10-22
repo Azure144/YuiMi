@@ -1,0 +1,287 @@
+/**
+ * 小屏 / 移动端适配层
+ * 放在最后引入，用来统一各断点的行为，并处理手机浏览器（含 iOS Safari）的特性。
+ * 结构约定：1100 → 900 → 760 → 520 → 380，和主题原有断点保持一致。
+ */
+
+/* ---------- 通用 ---------- */
+
+html {
+  /* 页面内锚点跳转时，给固定头部留出空间 */
+  scroll-padding-top: 92px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body[data-fuyukawa] {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+/* 刘海屏 / 灵动岛：让固定头部不被系统状态栏压住 */
+body[data-fuyukawa] .site-header {
+  padding-top: calc(7px + env(safe-area-inset-top, 0px));
+}
+
+
+@media (max-width: 1100px) {
+  /* 导航在平板上只保留图标 + 主标签：提示文案会把胶囊撑成两行 */
+  body[data-fuyukawa] .nav-hint {
+    display: none;
+  }
+
+  body[data-fuyukawa] .nav-links a {
+    min-height: 44px;
+    padding: 6px 11px;
+  }
+
+  /* 头部加一层自上而下的纸色渐变，滚动的标题不会和导航标签糊在一起 */
+  body[data-fuyukawa] .site-header::before {
+    content: "";
+    display: block;
+    position: absolute;
+    inset: 0 0 -18px;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 250, 241, 0.95) 0%,
+      rgba(255, 250, 241, 0.88) 58%,
+      rgba(255, 250, 241, 0) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* 导航胶囊在窄屏改为近乎不透明：否则页面滚动时文字会从胶囊里透出来 */
+  body[data-fuyukawa] .nav-links {
+    background: #fffdf9f7;
+    box-shadow:
+      inset 0 1px 0 #ffffff,
+      0 6px 18px rgba(82, 111, 140, 0.16);
+  }
+
+  /* Hero 文案压在拼贴画上，小屏时补一层纸色底，保证可读 */
+  body[data-fuyukawa] .hero-copy {
+    padding: 16px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.86);
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 250, 241, 0.9), rgba(255, 250, 241, 0.74));
+    box-shadow: 0 10px 28px rgba(82, 111, 140, 0.12);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* ---------- 平板 / 窄桌面 ---------- */
+
+@media (max-width: 900px) and (min-width: 761px) {
+  /* 三个游戏机并排时每个只剩 210px，这一档降到两列；
+     再窄（≤760）交回单列，否则卡片会被压到 158px。 */
+  body[data-fuyukawa] .game-room {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Hero 终端行是 nowrap，字号不降就会被卡片裁掉尾部 */
+  body[data-fuyukawa] .hero-copy .terminal-line {
+    font-size: 0.7rem;
+  }
+
+  body[data-fuyukawa] .hero-copy .terminal-typing {
+    font-size: 0.7rem;
+  }
+}
+
+/* ---------- 手机 ---------- */
+
+@media (max-width: 760px) {
+  /* 手机上一律单列，别让三台游戏机挤成一条 */
+  body[data-fuyukawa] .game-room {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* iOS 在输入框字号小于 16px 时会自动放大页面，这里统一压住 */
+  body[data-fuyukawa] input[type="search"],
+  body[data-fuyukawa] input[type="text"],
+  body[data-fuyukawa] textarea {
+    font-size: 16px;
+  }
+
+  body[data-fuyukawa] .blog-search-box input {
+    min-height: 44px;
+  }
+
+  /* 固定头部在手机上更矮，锚点留白同步收紧 */
+  html {
+    scroll-padding-top: 84px;
+  }
+
+  /* 导航在手机上只留图标 + 极简标签，避免 5 个条目挤成两行 */
+  body[data-fuyukawa] .nav-links {
+    gap: 0;
+    padding: 4px;
+  }
+
+  body[data-fuyukawa] .nav-links a {
+    padding: 4px 8px;
+    min-width: 56px;
+  }
+
+  /* Hero 文案是绝对定位，width:100% 会按 padding box 计算并溢出，
+     这里只收最大宽度，让它继续跟着父级的左右留白走 */
+  body[data-fuyukawa] .hero-copy {
+    max-width: 100%;
+  }
+
+  /* 章节栏是横向滚动区，触屏上补上顺滑滚动与吸附 */
+  body[data-fuyukawa] .chapter-track {
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+
+  body[data-fuyukawa] .chapter-rail-stage .chapter-leaf,
+  body[data-fuyukawa] .chapter-track > * {
+    scroll-snap-align: center;
+  }
+
+  /* 文章正文里的长链接、代码块不要撑破版面 */
+  body[data-fuyukawa] .prose :is(p, li) {
+    overflow-wrap: anywhere;
+  }
+
+  body[data-fuyukawa] .prose :is(pre, .expressive-code) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  /* 竖屏手机：贴纸、装饰字这类纯装饰元素在极窄屏上让位给内容 */
+  body[data-fuyukawa] .home-art-word small {
+    display: none;
+  }
+
+  body[data-fuyukawa] .hero-copy {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  /* 360 / 320 宽的设备：再收紧一档内边距与字号 */
+  body[data-fuyukawa] .nav-links a {
+    padding: 4px 6px;
+    min-width: 50px;
+  }
+
+  body[data-fuyukawa] .page-title h1,
+  body[data-fuyukawa] .works-hero h1 {
+    font-size: 1.9rem;
+  }
+}
+
+/* ---------- 品牌装饰字 ---------- */
+
+@media (max-width: 520px) {
+  /* 首页的「Yuimi Lab」是手写体大字，窄屏按视口宽度收缩，避免被右侧裁掉 */
+  body[data-fuyukawa] .home-art-word {
+    width: 100%;
+  }
+
+  body[data-fuyukawa] .home-art-word span {
+    font-size: clamp(1.85rem, 8.6vw, 2.5rem);
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ---------- 首页「本地信号」区（≤980 改为纵向流） ---------- */
+
+@media (max-width: 980px) {
+  /* 这三张卡在这一档是 position: relative，但 refresh.css 仍然给它们写了
+     top / left / right / bottom 偏移：相对定位的偏移只改视觉位置、不占布局空间，
+     于是「欢迎气泡」和「时间卡」必然叠在一起。这里统一清零，交给 grid 的 gap 排。 */
+  body[data-fuyukawa] .home-art-word,
+  body[data-fuyukawa] .home-signal-card,
+  body[data-fuyukawa] .home-welcome-bubble {
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    max-width: 100%;
+  }
+
+  body[data-fuyukawa] .tag-rain-stage {
+    gap: 22px;
+    /* 原来固定 min-height:700 + 底部 160px 内边距，三张卡排完还剩一大片空白，
+       这里让高度跟着内容走，只留一点呼吸空间给飘落标签。 */
+    min-height: 0;
+    padding-bottom: 64px;
+    align-content: start;
+  }
+
+  /* 保持「品牌字 → 欢迎语 → 时间卡」的阅读顺序（DOM 里时间卡在前面） */
+  body[data-fuyukawa] .home-art-word { order: 1; }
+  body[data-fuyukawa] .home-welcome-bubble { order: 2; }
+  body[data-fuyukawa] .home-signal-card { order: 3; }
+
+  /* 卡片不再靠边浮动，统一居中 */
+  body[data-fuyukawa] .home-signal-card,
+  body[data-fuyukawa] .home-welcome-bubble {
+    justify-self: center;
+    width: min(100%, 520px);
+  }
+}
+
+
+/* ---------- 宽屏首页 Hero：标题回到画面中央 ---------- */
+
+/* 主题原本是「左文案 + 居中看板娘」的漫画分镜版式，窗口一拉宽标题就贴在左边，
+   视觉重心落在画布外。这一档把文案组移到视口正中，看板娘退到右下角，
+   两者不重叠、各自完整。981px 以下交给上面几档的窄屏版式。 */
+@media (min-width: 981px) {
+  body[data-fuyukawa] .hero {
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: clamp(132px, 17vh, 160px);
+  }
+
+  body[data-fuyukawa] .hero-copy {
+    width: min(440px, 100%);
+    max-width: 440px;
+    text-align: center;
+    justify-items: center;
+  }
+
+  body[data-fuyukawa] .hero-copy .hero-diary-line,
+  body[data-fuyukawa] .hero-copy .terminal-line {
+    margin-inline: auto;
+  }
+
+  /* 角色层是整张 1920×1080 的图层，缩到右下并右对齐，
+     宽度随视口收放，右侧留出「今日公告」和呼吸空间。 */
+  body[data-fuyukawa] .manga-scene-camera .manga-scene-front {
+    inset: auto 24px 24px auto;
+    width: clamp(62%, calc(100% - 480px), 76%);
+    height: 96%;
+    object-fit: contain;
+    object-position: right bottom;
+  }
+}
+
+/* 矮窗口（笔记本半屏、横屏平板）里 Hero 只有 600px 上下，
+   角色按原宽度缩放会顶到标题上，这一档把角色再缩小并压低。 */
+@media (min-width: 981px) and (max-height: 700px) {
+  body[data-fuyukawa] .manga-scene-camera .manga-scene-front {
+    width: 46%;
+    height: 82%;
+    bottom: 12px;
+  }
+}
+
+/* 矮窗口（笔记本半屏、横屏平板）里 Hero 只有 600px 上下，
+   角色按原宽度缩放会顶到标题上，这一档把角色再缩小并压低。 */
+@media (min-width: 981px) and (max-height: 700px) {
+  body[data-fuyukawa] .manga-scene-camera .manga-scene-front {
+    width: 46%;
+    height: 82%;
+    bottom: 12px;
+  }
+}

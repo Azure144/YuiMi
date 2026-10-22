@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+.DS_Store
+Thumbs.db
+*.log
+__pycache__/
+*.pyc
+.env
+.env.local
+
+# custom/assets 的构建副本
+public/custom/

@@ -1,0 +1,36 @@
+{
+  "name": "fuyukawa-kagari",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "predev": "node scripts/sync-custom-assets.mjs",
+    "build": "astro build",
+    "check": "astro check",
+    "postbuild": "node scripts/check-assets.mjs",
+    "prebuild": "node scripts/sync-custom-assets.mjs",
+    "preview": "astro preview",
+    "prepreview": "node scripts/sync-custom-assets.mjs",
+    "sync:custom": "node scripts/sync-custom-assets.mjs",
+    "deploy": "wrangler pages deploy dist"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.1",
+    "@astrojs/sitemap": "^3.7.4",
+    "@iconify-json/simple-icons": "^1.2.83",
+    "@iconify-json/tabler": "^1.2.35",
+    "astro": "^7.3.5",
+    "astro-expressive-code": "^0.44.2",
+    "astro-icon": "^1.2.0",
+    "pagefind": "^1.5.2",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-expressive-code": "^0.44.2",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.11",
+    "typescript": "^6.0.3"
+  }
+}
