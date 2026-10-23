@@ -105,6 +105,13 @@ const projectCards = projectEntries.map((project) => ({
     const filterButtons = filterRoot ? Array.from(filterRoot.querySelectorAll("button")) : [];
     const cards = Array.from(document.querySelectorAll("[data-project-line]"));
     const lineCards = Array.from(document.querySelectorAll("[data-line-card]"));
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const playFilterIn = (card) => {
+      if (!card || reduceMotion) return;
+      card.classList.remove("is-yuimi-filter-in");
+      void card.offsetWidth;
+      card.classList.add("is-yuimi-filter-in");
+    };
 
     filterButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -118,6 +125,7 @@ const projectCards = projectEntries.map((project) => ({
           const isMatch = filter === "all" || card.dataset.projectLine === filter;
           card.classList.toggle("is-dimmed", !isMatch);
           card.hidden = !isMatch;
+          if (isMatch) playFilterIn(card);
         });
         lineCards.forEach((card) => {
           const isMatch = filter === "all" || card.dataset.lineCard === filter;

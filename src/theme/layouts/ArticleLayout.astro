@@ -6,6 +6,7 @@ import type { BlogPost } from "@/core/content/blog";
 import { getThemePath } from "@/core/themes/registry";
 import { Icon } from "astro-icon/components";
 import MangaArt from "../components/MangaArt.astro";
+import { articleHeaderTransition } from "../transitions";
 
 interface Props {
   frontmatter: BlogPost["data"];
@@ -35,7 +36,11 @@ const headings = allHeadings.filter((heading) => heading.depth >= 2 && heading.d
     )}
     <article class="article" data-pagefind-body>
       <a class="back-link" href={getThemePath("fuyukawa-kagari", "/blog/")}><Icon name="tabler:arrow-left" aria-hidden="true" />回到笔记存档</a>
-      <header class="article-header">
+      <header
+        class="article-header"
+        transition:name="article-header"
+        transition:animate={articleHeaderTransition}
+      >
         <div class="meta-row">
           <span>{categoryLabel[frontmatter.category]}</span>
           <time datetime={frontmatter.pubDate.toISOString()}>{date}</time>

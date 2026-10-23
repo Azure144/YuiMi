@@ -1,0 +1,162 @@
+/* ------------------------------------------------------------------
+   Yuimi Lab · route motion
+   Keep motion quiet: opacity + 6–8px translate, one shot per navigation.
+   ------------------------------------------------------------------ */
+
+:root {
+  --yuimi-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --yuimi-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --yuimi-local: 160ms;
+}
+
+@keyframes yuimi-page-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes yuimi-page-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+@keyframes yuimi-article-head-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes yuimi-article-head-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -3px, 0);
+  }
+}
+
+@keyframes yuimi-filter-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 5px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The shell (fixed header, footer, toy dock) should feel anchored while the
+   reading surface changes. Keeping the root snapshot still also avoids a
+   second cross-fade layered on top of the main animation. */
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* A quiet press state for the main navigation. Its hover transition already
+   exists in refresh.css; this only adds the tactile part. */
+body[data-fuyukawa] .nav-links a:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+/* Filter bars: the selected pill changes smoothly instead of snapping. */
+body[data-fuyukawa] .works-filter button,
+body[data-fuyukawa] .archive-tabs button {
+  transition:
+    background-color var(--yuimi-local) ease,
+    border-color var(--yuimi-local) ease,
+    color var(--yuimi-local) ease,
+    box-shadow var(--yuimi-local) ease,
+    transform var(--yuimi-local) ease;
+}
+
+body[data-fuyukawa] .works-filter button:active,
+body[data-fuyukawa] .archive-tabs button:active {
+  transform: scale(0.97);
+}
+
+/* Filtered entries get one short entrance. JS adds this class only when an
+   item becomes visible, so switching categories never replays old items. */
+body[data-fuyukawa] .is-yuimi-filter-in {
+  animation: yuimi-filter-in 180ms var(--yuimi-ease-out) both;
+}
+
+/* Cards that are fully clickable get a 2px lift; works cards intentionally
+   keep their existing flat hover treatment. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  body[data-fuyukawa] .blog-post-row,
+  body[data-fuyukawa] .journal-entry,
+  body[data-fuyukawa] .game-cabinet-card,
+  body[data-fuyukawa] .blog-search-result {
+    transition:
+      transform 180ms var(--yuimi-ease-out),
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  body[data-fuyukawa] .blog-post-row:hover,
+  body[data-fuyukawa] .journal-entry:hover,
+  body[data-fuyukawa] .game-cabinet-card:hover {
+    transform: translateY(-2px);
+  }
+
+  body[data-fuyukawa] .blog-search-result:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* The site already has functional modal / context-menu motion. These small
+   press states make their triggers feel consistent with the rest. */
+body[data-fuyukawa] .home-notice-close:active,
+body[data-fuyukawa] .works-card-toggle:active,
+body[data-fuyukawa] .game-actions a:active,
+body[data-fuyukawa] .back-link:active {
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+
+  body[data-fuyukawa] .nav-links a:active,
+  body[data-fuyukawa] .works-filter button:active,
+  body[data-fuyukawa] .archive-tabs button:active,
+  body[data-fuyukawa] .home-notice-close:active,
+  body[data-fuyukawa] .works-card-toggle:active,
+  body[data-fuyukawa] .game-actions a:active,
+  body[data-fuyukawa] .back-link:active,
+  body[data-fuyukawa] .blog-post-row:hover,
+  body[data-fuyukawa] .journal-entry:hover,
+  body[data-fuyukawa] .game-cabinet-card:hover,
+  body[data-fuyukawa] .blog-search-result:hover {
+    transform: none;
+  }
+
+  body[data-fuyukawa] .is-yuimi-filter-in {
+    animation: none;
+  }
+}

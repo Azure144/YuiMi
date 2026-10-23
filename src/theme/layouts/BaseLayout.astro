@@ -3,10 +3,11 @@ import "../styles/theme.css";
 import "@/theme/styles/refresh.css";
 import "@/theme/styles/manga.css";
 import "@/theme/styles/responsive.css";
-import "@/theme/styles/responsive.css";
+import "@/theme/styles/transitions.css";
 import refreshPagesHref from "../styles/refresh-pages.css?url";
 import mangaPagesHref from "../styles/manga-pages.css?url";
 import { features, radio, site, theme } from "@custom/site.config";
+import { pageTransition } from "../transitions";
 import type { BlogPost } from "@/core/content/blog";
 import { Icon } from "astro-icon/components";
 import { ClientRouter } from "astro:transitions";
@@ -213,7 +214,12 @@ const featuresPayload = (JSON.stringify(features) ?? "null").replace(/</g, "\\u0
           }
         </nav>
       </header>
-      <main id="page-content" tabindex="-1">
+      <main
+        id="page-content"
+        tabindex="-1"
+        transition:name="page-content"
+        transition:animate={pageTransition}
+      >
         <slot />
       </main>
       <footer class="site-footer" data-footer-timers>
@@ -399,6 +405,25 @@ const featuresPayload = (JSON.stringify(features) ?? "null").replace(/</g, "\\u0
       });
       document.addEventListener("astro:before-swap", dismissToyDock);
       document.addEventListener("astro:page-load", syncToyDock);
+
+      // Close viewport-locking overlays before the router captures the old
+      // page. In particular the home notice makes <body> position: fixed;
+      // swapping it mid-transition is both visually wrong and unstable.
+      const closeRouteOverlays = () => {
+        window.__yuimiNoticeCleanup?.();
+        document.querySelector("[data-context-menu]")?.classList.remove("is-open");
+        const noticeTrigger = document.querySelector("[data-notice-open]");
+        noticeTrigger?.setAttribute("aria-expanded", "false");
+        const noticeBackdrop = document.querySelector("[data-notice-backdrop]");
+        if (noticeBackdrop) {
+          noticeBackdrop.classList.remove("is-open");
+          noticeBackdrop.hidden = true;
+        }
+        document.documentElement.classList.remove("is-notice-open");
+        document.body.classList.remove("is-notice-open");
+        document.body.style.top = "";
+      };
+      document.addEventListener("astro:before-preparation", closeRouteOverlays);
 
       const live2dBase = "https://fastly.jsdelivr.net/npm/live2d-widgets@1.0.0-rc.6/dist/";
       const live2dConfig = "/live2d/waifu-tips.json";

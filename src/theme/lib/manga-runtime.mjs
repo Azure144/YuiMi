@@ -1,5 +1,14 @@
 export const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
+/** Replay the short filter entrance only for items that just became visible. */
+export function playFilterIn(element) {
+  if (!element || typeof window === "undefined") return;
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  element.classList.remove("is-yuimi-filter-in");
+  void element.offsetWidth;
+  element.classList.add("is-yuimi-filter-in");
+}
+
 export function springStep(position, velocity, target, seconds) {
   const dt = clamp(seconds, 0, 1 / 30);
   // Fixed substeps keep the spring stable after a slow frame or interrupted input.
@@ -216,6 +225,7 @@ export function mountAlbum(root) {
     const choose = () => {
       tabs.forEach((item, i) => item.setAttribute("aria-pressed", String(i === index)));
       pages.forEach((item, i) => { item.hidden = i !== index; });
+      playFilterIn(pages[index]);
     };
     tab.addEventListener("click", choose);
     return () => tab.removeEventListener("click", choose);
@@ -234,7 +244,10 @@ export function mountArchive(root) {
       tabs.forEach((item) => item.setAttribute("aria-pressed", String(item === tab)));
       entries.forEach((entry) => {
         entry.hidden = category !== "all" && entry.dataset.entryCategory !== category;
-        if (!entry.hidden) visible++;
+        if (!entry.hidden) {
+          visible++;
+          playFilterIn(entry);
+        }
       });
       if (count) count.textContent = `${visible} 篇笔记`;
     };
