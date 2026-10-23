@@ -186,6 +186,6 @@ export const services = {
 ## 小提示
 
 - `custom/assets/` 里的文件会全量同步，别放无关的大文件（会一起进 `dist/`）。
-- 只想加文章：不用碰这里，直接写 `src/content/blog/*.md`。
+- 写文章：复制 `src/content/blog/template.md`，改成自己的文件名，填好 frontmatter 后把 `draft` 改为 `false`。正文图片放到 `public/blog-assets/`，封面放到 `public/blog-covers/`；未登记 responsive 封面时会直接使用原图。
 - 图片建议 webp，单张控制在 300KB 以内；Cloudflare Pages 单文件上限 25MB。
 - 改完跑一次 `npm run build`，能提前发现路径写错（构建会报缺失引用）。

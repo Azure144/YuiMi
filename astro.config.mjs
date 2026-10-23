@@ -55,7 +55,8 @@ const pagefindIntegration = () => ({
     "astro:build:done": async ({ dir, logger }) => {
       const { index, errors } = await pagefind.createIndex({
         forceLanguage: "zh",
-        includeCharacters: "_-:"
+        includeCharacters: "_-:",
+        rootSelector: "[data-pagefind-body]"
       });
 
       if (!index) {

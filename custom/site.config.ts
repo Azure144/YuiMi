@@ -6,15 +6,15 @@
 /** 站点名称与 SEO 信息（会用在页面标题、OG 卡片、JSON-LD、页脚） */
 export const site = {
   /** 站点名，显示在导航栏、页脚、og:site_name */
-  name: "Yuimi Lab",
+  name: "Evil Lab",
   /** 浏览器标签标题；内页会自动拼成「页面名 | 站点名」 */
-  title: "Yuimi Lab | Anime x Code",
+  title: "Evil Lab | Anime x Code",
   /** 一句话简介，用于首页与默认分享描述 */
   description: "一个混合二次元审美与技术开发记录的个人博客。",
   /** 作者署名，用于 meta author / 版权信息 */
-  author: "喝益胃 / Yuimi-chaya",
+  author: "Neuro / Coccineus",
   /** SEO 关键词 */
-  keywords: ["喝益胃", "Yuimi-chaya", "Yuimi Lab", "个人博客", "二次元", "技术开发", "Astro"],
+  keywords: ["喝益胃", "Neuro-chaya", "Neuro Lab", "个人博客", "二次元", "技术开发", "Astro"],
   /**
    * 顶部导航。href 用根路径，不要带 /themes 前缀。
    * icon 取 tabler 图标名，可用值见 custom 说明。
@@ -70,9 +70,9 @@ export const theme = {
 
 /** 音乐播放器上的文案 */
 export const radio = {
-  title: "Yuimi Radio",
+  title: "Evil Radio",
   /** 播放器副标题，例如歌单名 */
-  meta: "Yuimi playlist",
+  meta: "Evil playlist",
   /** 没有读取到歌曲时显示的占位曲名 */
   placeholder: "lofi sakura loop"
 };
@@ -84,12 +84,12 @@ export const radio = {
  * 天气会退回到按 IP 粗定位的公开接口。
  */
 export const services = {
-  tencentMapKey: "PDHBZ-Q6QAT-W7NXN-VIUTJ-PPEUV-C5F3P"
+  tencentMapKey: "MDDBZ-5NDLW-ISSRJ-3OBQT-P33HK-FEBXS"
 };
 
 /** 构建相关 */
 export const build = {
-  /**
+  /**s
    * 线上域名。也可以不改这里，在部署时用环境变量 SITE_URL 覆盖。
    * 会影响 canonical、og:url、sitemap 与 robots.txt。
    */

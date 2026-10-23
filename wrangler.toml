@@ -1,6 +1,0 @@
-# Cloudflare Pages 项目配置
-# 直接上传：npx wrangler pages deploy dist
-# Git 集成：在 Cloudflare 控制台选择本仓库，构建命令 npm run build，输出目录 dist
-name = "fuyukawa-kagari"
-pages_build_output_dir = "./dist"
-compatibility_date = "2026-10-01"

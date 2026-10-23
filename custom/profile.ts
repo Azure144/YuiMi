@@ -5,11 +5,11 @@
 
 export const profileIdentity = {
   /** 显示名，用在 About 页标题、作者署名、页脚 */
-  displayName: "喝益胃",
+  displayName: "Neuro",
   /** 英文名 / handle */
-  handle: "Yuimi-chaya",
+  handle: "Neuro",
   /** 站点名（About 页副标题里用） */
-  siteName: "Yuimi Lab",
+  siteName: "Evil Lab",
   /** 一句话自我介绍 */
   bio: "二次元技术宅 / 兴趣驱动型折腾人，喜欢研究有意思的小东西，也喜欢把开发记录做得清透一点。",
   /** 头像：可写 /assets/profile.webp 这样的绝对路径，也可只写文件名（从 custom/assets/ 取） */

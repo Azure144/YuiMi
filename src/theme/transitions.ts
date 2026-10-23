@@ -9,46 +9,78 @@
 const EASE_OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
 const EASE_IN = "cubic-bezier(0.4, 0, 1, 1)";
 
-const pagePair = {
+const pageForward = {
   old: {
     name: "yuimi-page-out",
-    duration: 150,
+    duration: 180,
     easing: EASE_IN,
     fillMode: "both"
   },
   new: {
     name: "yuimi-page-in",
-    duration: 220,
-    delay: 30,
+    duration: 300,
+    delay: 40,
     easing: EASE_OUT,
     fillMode: "both"
   }
 } as const;
 
-const articleHeaderPair = {
+const pageBackward = {
+  old: {
+    name: "yuimi-page-out-back",
+    duration: 180,
+    easing: EASE_IN,
+    fillMode: "both"
+  },
+  new: {
+    name: "yuimi-page-in-back",
+    duration: 300,
+    delay: 40,
+    easing: EASE_OUT,
+    fillMode: "both"
+  }
+} as const;
+
+const articleForward = {
   old: {
     name: "yuimi-article-head-out",
-    duration: 110,
+    duration: 130,
     easing: EASE_IN,
     fillMode: "both"
   },
   new: {
     name: "yuimi-article-head-in",
-    duration: 200,
-    delay: 55,
+    duration: 260,
+    delay: 60,
     easing: EASE_OUT,
     fillMode: "both"
   }
 } as const;
 
-/** 主内容区：轻微上移淡入，退出时更短、更轻。 */
-export const pageTransition = {
-  forwards: pagePair,
-  backwards: pagePair
+const articleBackward = {
+  old: {
+    name: "yuimi-article-head-out-back",
+    duration: 130,
+    easing: EASE_IN,
+    fillMode: "both"
+  },
+  new: {
+    name: "yuimi-article-head-in-back",
+    duration: 260,
+    delay: 60,
+    easing: EASE_OUT,
+    fillMode: "both"
+  }
 } as const;
 
-/** 文章头部：比正文稍晚一点出现，形成克制的错峰。 */
+/** 主内容区：退出上浮，进入时从下方滑入。 */
+export const pageTransition = {
+  forwards: pageForward,
+  backwards: pageBackward
+} as const;
+
+/** 文章头部：比正文稍晚出现，形成更明显的错峰。 */
 export const articleHeaderTransition = {
-  forwards: articleHeaderPair,
-  backwards: articleHeaderPair
+  forwards: articleForward,
+  backwards: articleBackward
 } as const;

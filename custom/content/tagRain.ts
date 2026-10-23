@@ -27,7 +27,7 @@ export const tagRain = {
     "THE FINALS",
     "KovaaK's",
     "Aimlabs",
-    "Yuimi Radio",
+    "Neuro Radio",
     "Live2D",
     "小游戏"
   ],

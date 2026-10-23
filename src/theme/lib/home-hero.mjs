@@ -25,7 +25,7 @@ export function mountHomeHero() {
       "npm run scrapbook",
       "echo \"做自己想做，想自己所想\""
     ];
-    const nameLines = ["喝益胃", "Yuimi-chaya"];
+    const nameLines = ["喝益胃", "Neuro-chaya"];
 
     let pull = 0;
     let reversePull = 0;

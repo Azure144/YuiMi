@@ -2871,13 +2871,6 @@ img {
   box-shadow: none;
 }
 
-.prose img[src^="/blog-assets/codex-app-usage/"] {
-  display: block;
-  width: min(100%, 520px);
-  height: auto;
-  margin: 1.8rem auto;
-}
-
 .prose .article-side-illustration {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(180px, 220px);

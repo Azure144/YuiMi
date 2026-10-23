@@ -19,6 +19,7 @@ const serializeJsonForHtml = (value: unknown) =>
 const noticeContentPayload = serializeJsonForHtml(noticeContent);
 const siteDataPayload = serializeJsonForHtml({ tencentMapKey: services.tencentMapKey });
 const recentPosts = (await getPublishedPosts()).slice(0, 3);
+const homeTitle = "Neuro Lab";
 const tagRainConfigPayload = serializeJsonForHtml({
   palette: tagRain.palette,
   tags: tagRain.tags,
@@ -38,7 +39,7 @@ const tagRainConfigPayload = serializeJsonForHtml({
       </button>
       <div class="hero-copy" data-hero-copy>
         <p class="eyebrow">Fuyukawa Kagari · Personal diary</p>
-        <h1><img src={kagariAssets.heroTitle} alt={site.name} /></h1>
+        <h1><img src={kagariAssets.heroTitle} alt={homeTitle} /></h1>
         <p class="hero-diary-line">把喜欢的事，写进每一个平凡日子。</p>
         <p class="hero-text terminal-line" aria-label="dev diary subtitle">
           <span class="hero-terminal-badge" aria-hidden="true"></span>
@@ -72,15 +73,15 @@ const tagRainConfigPayload = serializeJsonForHtml({
               <span></span>
               <span></span>
             </div>
-            <span class="terminal-title">yuimi-profile.exe</span>
+            <span class="terminal-title">neuro-profile.exe</span>
           </div>
-          <p class="identity-path">C:\Users\Yuimi\profile</p>
+          <p class="identity-path">C:\Users\Neuro\profile</p>
           <p class="identity-command">
-            <span class="terminal-prefix">profile@yuimi:~$</span>
+            <span class="terminal-prefix">profile@neuro:~$</span>
             <span data-name-typing></span>
             <span class="terminal-cursor" aria-hidden="true"></span>
           </p>
-          <p class="identity-caption">喝益胃 / Yuimi-chaya</p>
+          <p class="identity-caption">喝益胃 / Neuro-chaya</p>
           <div class="social-links" aria-label="Social links">
             <a href="https://github.com/Yuimi-chaya" target="_blank" rel="noreferrer" aria-label="GitHub profile">
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -158,10 +159,10 @@ const tagRainConfigPayload = serializeJsonForHtml({
       data-tags={JSON.stringify(tagRain.labels)}
       data-tag-rain-config={tagRainConfigPayload}
       data-pig-src={kagariAssets.scrollPig}
-      aria-label={`${site.name} tag rain`}
+      aria-label={`${homeTitle} tag rain`}
     >
-      <div class="home-art-word" aria-label={site.name}>
-        <span>{site.name}</span>
+      <div class="home-art-word" aria-label={homeTitle}>
+        <span>{homeTitle}</span>
         <small>anime notes / tiny toys / dev memo</small>
       </div>
       <div class="home-signal-card" aria-label="Local signal">
@@ -265,7 +266,7 @@ const tagRainConfigPayload = serializeJsonForHtml({
           title: `第 ${dayOfYear} 号历史趣味胶囊`,
           tone: "history",
           lines: [theme[2], `今天的随机行动：${actions[(dayOfYear - 1) % actions.length]}`],
-          footnote: "没有撞上固定节日时，Yuimi Lab 会按日期投递不同的冷知识胶囊。"
+          footnote: "没有撞上固定节日时，Neuro Lab 会按日期投递不同的冷知识胶囊。"
         };
       };
       const createThursdayV50Entry = () => {

@@ -595,7 +595,7 @@ const featuresPayload = (JSON.stringify(features) ?? "null").replace(/</g, "\\u0
         if (document.querySelector(".waifu-local-fallback")) return;
         const fallback = document.createElement("div");
         fallback.className = "waifu-local-fallback";
-        fallback.setAttribute("aria-label", "Yuimi Lab fallback 看板娘");
+        fallback.setAttribute("aria-label", "Neuro Lab fallback 看板娘");
         fallback.innerHTML = `
           <div class="waifu-local-bubble">Live2D 加载有点害羞，先由我值班。</div>
           <div class="waifu-local-character">
@@ -622,7 +622,7 @@ const featuresPayload = (JSON.stringify(features) ?? "null").replace(/</g, "\\u0
         const hasWidgetTools = Boolean(document.getElementById("waifu-tool"));
         if (hasUsableCanvas && hasWidgetTools) {
           removeLocalWaifuFallback();
-          setLive2dStatus("看板娘正在左侧待机。");
+          setLive2dStatus("看板娘正在页面中央待机。");
           return;
         }
         ensureLocalWaifuFallback();
@@ -640,7 +640,7 @@ const featuresPayload = (JSON.stringify(features) ?? "null").replace(/</g, "\\u0
         const canvasRect = canvas.getBoundingClientRect();
         if (canvasRect.width > 80 && canvasRect.height > 80) {
           removeLocalWaifuFallback();
-          setLive2dStatus("看板娘正在左侧待机。");
+          setLive2dStatus("看板娘正在页面中央待机。");
         }
       };
 
@@ -671,7 +671,7 @@ const featuresPayload = (JSON.stringify(features) ?? "null").replace(/</g, "\\u0
               if (generation !== live2dGeneration || !isHomeRoute()) return;
               live2dReactions = createLive2dReactions(AppDelegate);
             } catch (error) {
-              console.warn("[Yuimi Live2D] Expression controller unavailable.", error);
+              console.warn("[Neuro Live2D] Expression controller unavailable.", error);
             }
           }
           window.initWidget({
@@ -685,12 +685,12 @@ const featuresPayload = (JSON.stringify(features) ?? "null").replace(/</g, "\\u0
           live2dReady = true;
           live2dVisible = true;
           if (live2dToggle) live2dToggle.textContent = "隐藏看板娘";
-          setLive2dStatus("看板娘正在左侧待机。");
+          setLive2dStatus("看板娘正在页面中央待机。");
           waitForWaifu((waifu) => {
             waifu.classList.remove("waifu-hidden");
             waifu.classList.add("waifu-active");
             anchorWaifu(waifu);
-            live2dWelcomeTimers.push(window.setTimeout(() => showWaifuMessage("欢迎来到 Yuimi Lab，今天也要开心写代码。"), 900));
+            live2dWelcomeTimers.push(window.setTimeout(() => showWaifuMessage("欢迎来到 Neuro Lab，今天也要开心写代码。"), 900));
             live2dWelcomeTimers.push(window.setTimeout(reconcileWaifuFallback, 4200));
             live2dWelcomeTimers.push(window.setTimeout(activateWaifuFallbackIfBlank, 12000));
           });
@@ -883,7 +883,7 @@ const featuresPayload = (JSON.stringify(features) ?? "null").replace(/</g, "\\u0
           queryElements();
           const { toggle, volume, seek, track, current, duration, note, status, volumeLabel } = player.elements;
           const currentTrack = player.tracks[player.index];
-          if (track) track.textContent = currentTrack?.title ?? "Yuimi Radio";
+          if (track) track.textContent = currentTrack?.title ?? "Neuro Radio";
           if (current) current.textContent = formatAudioTime(audio.currentTime);
           if (duration) duration.textContent = formatAudioTime(audio.duration);
           if (seek && !player.seeking) {

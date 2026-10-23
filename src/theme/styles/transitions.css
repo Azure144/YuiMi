@@ -1,6 +1,6 @@
 /* ------------------------------------------------------------------
-   Yuimi Lab · route motion
-   Keep motion quiet: opacity + 6–8px translate, one shot per navigation.
+   Neuro Lab · route motion
+   Clear but still calm: opacity + 14–24px translate, one shot per navigation.
    ------------------------------------------------------------------ */
 
 :root {
@@ -12,7 +12,7 @@
 @keyframes yuimi-page-in {
   from {
     opacity: 0;
-    transform: translate3d(0, 8px, 0);
+    transform: translate3d(0, 24px, 0);
   }
   to {
     opacity: 1;
@@ -27,14 +27,36 @@
   }
   to {
     opacity: 0;
-    transform: translate3d(0, -4px, 0);
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes yuimi-page-in-back {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes yuimi-page-out-back {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
   }
 }
 
 @keyframes yuimi-article-head-in {
   from {
     opacity: 0;
-    transform: translate3d(0, 8px, 0);
+    transform: translate3d(0, 18px, 0);
   }
   to {
     opacity: 1;
@@ -49,7 +71,29 @@
   }
   to {
     opacity: 0;
-    transform: translate3d(0, -3px, 0);
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes yuimi-article-head-in-back {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes yuimi-article-head-out-back {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
   }
 }
 

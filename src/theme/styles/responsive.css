@@ -170,7 +170,7 @@ body[data-fuyukawa] .site-header {
 /* ---------- 品牌装饰字 ---------- */
 
 @media (max-width: 520px) {
-  /* 首页的「Yuimi Lab」是手写体大字，窄屏按视口宽度收缩，避免被右侧裁掉 */
+  /* 首页的「Neuro Lab」是手写体大字，窄屏按视口宽度收缩，避免被右侧裁掉 */
   body[data-fuyukawa] .home-art-word {
     width: 100%;
   }

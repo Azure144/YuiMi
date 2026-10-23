@@ -40,11 +40,9 @@ export const images = {
 
 /**
  * 封面裁切焦点。键是封面路径，值是 object-position。
- * 想让某张封面在列表里更居中，在这里调即可。
+ * 添加封面后，如需调整裁切位置，在这里补充即可。
  */
-export const coverFocus: Record<string, string> = {
-  "/blog-covers/cover-08.webp": "50% 30%"
-};
+export const coverFocus: Record<string, string> = {};
 
 /**
  * 漫画图替换。默认用 public/assets/manga/ 下的同名 webp。
