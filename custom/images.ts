@@ -35,9 +35,7 @@ export const images = {
   /** 站点图标 */
   favicon: "/assets/pig-favicon.png",
   /** iOS 添加到主屏时的图标 */
-  appleTouchIcon: "/assets/pig-apple-touch.png",
-  /** 404 插图 */
-  notFound: "/assets/legacy/404.webp"
+  appleTouchIcon: "/assets/pig-apple-touch.png"
 };
 
 /**

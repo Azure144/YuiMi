@@ -227,11 +227,6 @@ img {
   transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.toy-dock:hover,
-.toy-dock.is-pinned {
-  transform: translateX(0);
-}
-
 .toy-dock-handle {
   position: absolute;
   top: 24px;
@@ -269,10 +264,6 @@ img {
   overflow: visible;
   padding: 14px;
   color: var(--ink);
-}
-
-.live2d-control-widget {
-  padding: 10px;
 }
 
 .live2d-control-widget .toy-widget-title {

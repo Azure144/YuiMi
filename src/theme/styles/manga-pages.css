@@ -29,10 +29,6 @@ body[data-fuyukawa] .works-card:first-child { grid-column: 1 / -1; padding-right
 body[data-fuyukawa] .works-page-number { position: absolute; right: 22px; top: 18px; font: 1.05rem Consolas, monospace; color: #a2b2c6; }
 body[data-fuyukawa] .works-card-head { padding-right: 24px; }
 body[data-fuyukawa] .works-card-companion { position: absolute; bottom: 16px; right: 42px; width: 128px; height: 200px; }
-body[data-fuyukawa] .works-card--pink { border-top-color: var(--pink); }
-body[data-fuyukawa] .works-card--mint { border-top-color: var(--mint); }
-body[data-fuyukawa] .works-card--lavender { border-top-color: var(--lavender); }
-body[data-fuyukawa] .works-card--orange { border-top-color: #dfbc88; }
 body[data-fuyukawa] .game-hero-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .85fr); align-items: center; gap: 36px; padding: 16px 0 30px; }
 body[data-fuyukawa] .playroom-scene { position: relative; min-height: 285px; padding: 8px 58px 55px 0; }
 /* 这张 4:3 的漫画条按 contain 放会左右各留一大块空白，

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { noticeContent } from "@custom/content/notice";
+import { tagRain } from "@custom/content/tagRain";
 import { kagariAssets } from "../assets";
 import { Icon } from "astro-icon/components";
 import { getPublishedPosts } from "@/core/content/blog";
@@ -18,33 +19,12 @@ const serializeJsonForHtml = (value: unknown) =>
 const noticeContentPayload = serializeJsonForHtml(noticeContent);
 const siteDataPayload = serializeJsonForHtml({ tencentMapKey: services.tencentMapKey });
 const recentPosts = (await getPublishedPosts()).slice(0, 3);
-
-const fallingTags = [
-  "Unity3D",
-  "Blender",
-  "UE5",
-  "MMD",
-  "AstrBot",
-  "猫娘",
-  "粉毛",
-  "病娇",
-  "重女",
-  "契约之吻",
-  "青春猪头少年",
-  "无职转生",
-  "夏洛特",
-  "Summer Pockets",
-  "埃罗芒阿老师",
-  "游戏人生",
-  "超电磁炮",
-  "Cyberpunk 2077",
-  "THE FINALS",
-  "KovaaK's",
-  "Aimlabs",
-  "Yuimi Radio",
-  "Live2D",
-  "小游戏"
-];
+const tagRainConfigPayload = serializeJsonForHtml({
+  palette: tagRain.palette,
+  tags: tagRain.tags,
+  pigs: tagRain.pigs,
+  motion: tagRain.motion
+});
 ---
 
 <BaseLayout>
@@ -171,7 +151,15 @@ const fallingTags = [
   <ChapterRail />
 
   <div class="home-content-bg">
-    <section class="tag-rain-stage" id="main-content" data-tag-rain data-tags={JSON.stringify(fallingTags)} data-pig-src={kagariAssets.scrollPig} aria-label={`${site.name} tag rain`}>
+    <section
+      class="tag-rain-stage"
+      id="main-content"
+      data-tag-rain
+      data-tags={JSON.stringify(tagRain.labels)}
+      data-tag-rain-config={tagRainConfigPayload}
+      data-pig-src={kagariAssets.scrollPig}
+      aria-label={`${site.name} tag rain`}
+    >
       <div class="home-art-word" aria-label={site.name}>
         <span>{site.name}</span>
         <small>anime notes / tiny toys / dev memo</small>
@@ -501,7 +489,7 @@ const fallingTags = [
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      const labels = (() => {
+      const allLabels = (() => {
         try {
           const parsed = JSON.parse(stage.dataset.tags || "[]");
           return [...new Set(Array.isArray(parsed) ? parsed : [])];
@@ -513,10 +501,72 @@ const fallingTags = [
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const performanceProfile = document.documentElement.dataset.yuimiPerformance ?? "full";
       const mobilePerformance = performanceProfile !== "full";
-      const litePerformance = performanceProfile === "lite";
       const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
       const effectiveType = String(connection?.effectiveType || "").toLowerCase();
       const constrainedNetwork = Boolean(connection?.saveData) || /(^|-)2g$/.test(effectiveType);
+
+      const rawConfig = (() => {
+        try {
+          return JSON.parse(stage.dataset.tagRainConfig || "{}");
+        } catch {
+          return {};
+        }
+      })();
+      const selectLabels = (source, limit) => {
+        if (!source.length) return [];
+        const count = Math.min(source.length, Math.max(1, Math.floor(Number(limit)) || source.length));
+        if (count >= source.length) return source.slice();
+        if (count === 1) return [source[0]];
+        return Array.from({ length: count }, (_, index) =>
+          source[Math.round((index * (source.length - 1)) / (count - 1))]
+        );
+      };
+      const palette = Array.isArray(rawConfig.palette) && rawConfig.palette.length
+        ? rawConfig.palette
+        : [
+            { fill: "#fff5bf", stroke: "#f0c95a", ink: "#725d22" },
+            { fill: "#ffddea", stroke: "#f2a8bd", ink: "#824759" },
+            { fill: "#dff2ff", stroke: "#9fc8eb", ink: "#315a78" },
+            { fill: "#dff5ea", stroke: "#9bd6b7", ink: "#315e49" },
+            { fill: "#eee4ff", stroke: "#c9b8ef", ink: "#57467b" }
+          ];
+      const rawMotion = rawConfig.motion && typeof rawConfig.motion === "object" ? rawConfig.motion : {};
+      const tagConfig = rawConfig.tags && typeof rawConfig.tags === "object" ? rawConfig.tags : {};
+      const pigConfig = {
+        minWidth: 42,
+        maxWidth: 58,
+        heightRatio: 0.78,
+        spritePad: 6,
+        ...(rawConfig.pigs && typeof rawConfig.pigs === "object" ? rawConfig.pigs : {})
+      };
+      const dprCaps = {
+        desktop: 1.35,
+        mobile: 1.1,
+        lite: 1,
+        ...(rawMotion.dpr && typeof rawMotion.dpr === "object" ? rawMotion.dpr : {})
+      };
+      const limits = {
+        desktop: { labels: 20, pigs: 3 },
+        mobile: { labels: 14, pigs: 2 },
+        lite: { labels: 10, pigs: 2 },
+        ...(rawMotion.limits && typeof rawMotion.limits === "object" ? rawMotion.limits : {})
+      };
+      const fpsCaps = {
+        desktop: 60,
+        mobile: 90,
+        lite: 60,
+        ...(rawMotion.maxFps && typeof rawMotion.maxFps === "object" ? rawMotion.maxFps : {})
+      };
+      // 窄桌面窗口不等于触摸设备：只有 coarse pointer 才降标签数，
+      // 否则 702px 的桌面窗口会被 PerformanceProfile 的 compact 规则误伤。
+      const coarsePointer = window.matchMedia?.("(pointer: coarse)").matches ?? false;
+      const tagRainTier = performanceProfile === "lite" ? "lite" : coarsePointer ? "mobile" : "desktop";
+      const tierLimits = limits[tagRainTier] ?? limits.desktop;
+      const labels = selectLabels(allLabels, tierLimits.labels);
+      const maxFps = Math.min(90, Math.max(60, Number(fpsCaps[tagRainTier]) || 60));
+      const frameInterval = 1000 / maxFps;
+      const dropDelay = Array.isArray(rawMotion.dropDelay) ? rawMotion.dropDelay : [120, 220];
+      const fadeDuration = Math.max(1000, Number(rawMotion.fadeDuration) || 5200);
       const pigImage = new Image();
       pigImage.src = stage.dataset.pigSrc || "/assets/mini-pig-scroll.webp";
       const dateTarget = document.querySelector("[data-home-date]");
@@ -823,14 +873,6 @@ const fallingTags = [
       });
       scheduleHomeWeather();
 
-      const palette = [
-        { fill: "#fff5bf", stroke: "#f0c95a", ink: "#725d22" },
-        { fill: "#ffddea", stroke: "#f2a8bd", ink: "#824759" },
-        { fill: "#dff2ff", stroke: "#9fc8eb", ink: "#315a78" },
-        { fill: "#dff5ea", stroke: "#9bd6b7", ink: "#315e49" },
-        { fill: "#eee4ff", stroke: "#c9b8ef", ink: "#57467b" }
-      ];
-
       const state = {
         bodies: [],
         queue: [],
@@ -848,7 +890,6 @@ const fallingTags = [
         dpr: 1,
         fadeStart: 0,
         lastPaint: 0,
-        scrollUntil: 0,
         visible: true
       };
 
@@ -885,12 +926,12 @@ const fallingTags = [
       };
 
       const makePig = (index) => {
-        const size = random(42, 58);
+        const size = random(pigConfig.minWidth, pigConfig.maxWidth);
         const radius = size * 0.52;
         return {
           type: "pig",
           width: size,
-          height: size * 0.78,
+          height: size * pigConfig.heightRatio,
           radius,
           x: random(radius + 14, state.width - radius - 14),
           y: -random(80, 320),
@@ -905,28 +946,26 @@ const fallingTags = [
 
       const resize = () => {
         const rect = stage.getBoundingClientRect();
-        // 2 倍屏画布在 1280 宽下要每帧清 2.5M 像素，标签是文字，1.5 倍已经足够清晰
-        const dprCeiling = litePerformance ? 1 : mobilePerformance ? 1.15 : 1.5;
+        const dprCeiling = Number(dprCaps[tagRainTier]) || 1.5;
         state.dpr = clamp(window.devicePixelRatio || 1, 1, dprCeiling);
-        state.width = Math.max(1, Math.floor(rect.width));
-        state.stageHeight = Math.max(1, Math.floor(rect.height));
+        state.width = Math.max(1, rect.width);
+        state.stageHeight = Math.max(1, rect.height);
         state.height = state.stageHeight + 80;
-        const pixelWidth = Math.floor(state.width * state.dpr);
-        const pixelHeight = Math.floor(state.height * state.dpr);
-        // 只在像素尺寸真的变了才重设 canvas：赋值 width/height 会清空画布并重分配缓冲区，
-        // 移动端地址栏收放会连续触发 resize，否则每一下都闪一次。
+        const pixelWidth = Math.round(state.width * state.dpr);
+        const pixelHeight = Math.round(state.height * state.dpr);
+        // CSS 负责 100% 显示尺寸，这里只同步 backing store；不要在 resize 循环里
+        // 反复改 style.width/height，否则会放大取整误差和右侧残影。
         if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
           canvas.width = pixelWidth;
           canvas.height = pixelHeight;
-          canvas.style.width = state.width + "px";
-          canvas.style.height = state.height + "px";
-          ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
         }
+        ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        ctx.clearRect(0, 0, state.width, state.height);
       };
 
       const prepareQueue = () => {
         const tagBodies = labels.map(makeTag);
-        const pigCount = Math.max(3, Math.min(6, Math.round(labels.length / 6)));
+        const pigCount = Math.max(0, Math.min(8, Number(tierLimits.pigs) || 0));
         const pigBodies = Array.from({ length: pigCount }, (_, index) => makePig(index));
         state.queue = [...tagBodies, ...pigBodies].sort(() => Math.random() - 0.5);
       };
@@ -937,6 +976,7 @@ const fallingTags = [
         prepareQueue();
         state.started = true;
         state.lastTime = performance.now();
+        state.lastPaint = 0;
         state.nextDrop = 0;
         stage.classList.add("is-raining");
         window.cancelAnimationFrame(state.raf);
@@ -954,6 +994,7 @@ const fallingTags = [
         state.done = false;
         state.raf = 0;
         state.lastTime = performance.now();
+        state.lastPaint = 0;
         state.nextDrop = 0;
         state.lastDropAt = 0;
         state.fadeStart = 0;
@@ -964,7 +1005,7 @@ const fallingTags = [
       // 每个标签的圆角底、描边、阴影、文字都是固定内容，逐帧重画会产生
       // 大量 shadowBlur（canvas 里最贵的操作）。这里把它们烘到离屏画布，
       // 主循环只做一次 drawImage，帧率能稳定下来。
-      const spritePad = 28;
+      const spritePad = Math.max(20, Number(tagConfig.spritePad) || 22);
 
       const buildCapsuleSprite = (body) => {
         const dpr = state.dpr;
@@ -1007,7 +1048,12 @@ const fallingTags = [
         ctx.restore();
       };
 
-      const pigSpritePad = 6;
+      const pigSpritePad = pigConfig.spritePad;
+
+      const bodyExtent = (body) => {
+        const pad = body.type === "pig" ? pigSpritePad : spritePad;
+        return Math.hypot(body.width / 2 + pad, body.height / 2 + pad);
+      };
 
       const buildPigSprite = (body) => {
         const dpr = state.dpr;
@@ -1095,13 +1141,15 @@ const fallingTags = [
         body.y += body.vy * dt;
         body.angle += body.spin * dt;
 
-        if (body.x - body.radius < 10) {
-          body.x = body.radius + 10;
+        const extent = bodyExtent(body);
+        const minX = extent + 10;
+        const maxX = Math.max(minX, state.width - extent - 10);
+        if (body.x < minX) {
+          body.x = minX;
           body.vx = Math.abs(body.vx) * 0.52;
           body.spin *= 0.35;
-        }
-        if (body.x + body.radius > state.width - 10) {
-          body.x = state.width - body.radius - 10;
+        } else if (body.x > maxX) {
+          body.x = maxX;
           body.vx = -Math.abs(body.vx) * 0.52;
           body.spin *= 0.35;
         }
@@ -1137,11 +1185,9 @@ const fallingTags = [
           return;
         }
 
-        // 桌面不设帧率上限（rAF 只能是 60/30/20，45fps 会退化成 30fps）。
-        // 滚动期间降到 30fps，把光栅化预算让给页面滚动本身。
-        const baseInterval = litePerformance ? 1000 / 24 : mobilePerformance ? 1000 / 30 : 0;
-        const minimumFrameInterval = now < state.scrollUntil ? Math.max(baseInterval, 1000 / 30) : baseInterval;
-        if (state.lastPaint && now - state.lastPaint < minimumFrameInterval) {
+        // 桌面 60fps，触摸设备目标 90fps（60Hz 屏仍为 60fps）。
+        // 不要用 45fps 之类的中间值做 interval 节流，rAF 会退化成 30fps。
+        if (state.lastPaint && now - state.lastPaint < frameInterval - 1) {
           state.raf = window.requestAnimationFrame(tick);
           return;
         }
@@ -1156,7 +1202,7 @@ const fallingTags = [
           if (next) {
             state.bodies.push(next);
             state.lastDropAt = now;
-            state.nextDrop = now + random(120, 220);
+            state.nextDrop = now + random(dropDelay[0], dropDelay[1]);
           } else {
             state.finishedDropping = true;
             state.lastDropAt = now;
@@ -1164,10 +1210,10 @@ const fallingTags = [
         }
 
         state.bodies.forEach((body) => stepBody(body, dt));
-        for (let i = 0; i < 2; i += 1) collideBodies();
+        collideBodies();
 
         if (state.fading) {
-          const fade = clamp((now - state.fadeStart) / 5200, 0, 1);
+          const fade = clamp((now - state.fadeStart) / fadeDuration, 0, 1);
           state.bodies.forEach((body) => {
             body.alpha = 1 - fade;
             body.y += fade * 0.05 * dt;
@@ -1202,7 +1248,6 @@ const fallingTags = [
       };
 
       const onScroll = () => {
-        state.scrollUntil = performance.now() + 180;
         if (isAtPageTop()) {
           resetRain();
           return;
@@ -1230,13 +1275,31 @@ const fallingTags = [
         });
         onScroll();
       }
-      const onResize = () => {
-        resize();
+      const clampBodies = () => {
         state.bodies.forEach((body) => {
-          body.x = clamp(body.x, body.radius + 10, state.width - body.radius - 10);
+          const extent = bodyExtent(body);
+          const minX = extent + 10;
+          const maxX = Math.max(minX, state.width - extent - 10);
+          body.x = clamp(body.x, minX, maxX);
           body.y = Math.min(body.y, state.stageHeight - 24 - body.radius);
         });
       };
+      let resizeTimer = 0;
+      let resizeObserver = null;
+      const onResize = () => {
+        if (resizeTimer) window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          resizeTimer = 0;
+          resize();
+          clampBodies();
+          state.lastTime = performance.now();
+          state.lastPaint = 0;
+        }, 80);
+      };
+      if ("ResizeObserver" in window) {
+        resizeObserver = new ResizeObserver(onResize);
+        resizeObserver.observe(stage);
+      }
       const onVisibilityChange = () => {
         state.visible = document.visibilityState === "visible";
         state.lastTime = performance.now();
@@ -1256,6 +1319,8 @@ const fallingTags = [
       window.addEventListener("pagehide", onPageHide);
       cleanupTasks.push(() => {
         window.cancelAnimationFrame(state.raf);
+        if (resizeTimer) window.clearTimeout(resizeTimer);
+        resizeObserver?.disconnect();
         window.removeEventListener("resize", onResize);
         document.removeEventListener("visibilitychange", onVisibilityChange);
         window.removeEventListener("pagehide", onPageHide);

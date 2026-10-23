@@ -16,7 +16,5 @@ export const kagariAssets = {
   heroTitle: resolveImage(images.heroTitle, "/assets/hero-title.svg"),
   profile: resolveImage(images.avatar, "/assets/profile.webp"),
   heroWallpaper: resolveImage(images.heroWallpaper, "/assets/hero-wallpaper.webp"),
-  pageBackground: resolveImage(images.pageBackground, "/assets/fuyukawa-kagari-bg.webp"),
-  notFound: resolveImage(images.notFound, "/assets/legacy/404.webp"),
-  musicManifest: `${themeRoot}/music/manifest.json`
+  pageBackground: resolveImage(images.pageBackground, "/assets/fuyukawa-kagari-bg.webp")
 } as const;

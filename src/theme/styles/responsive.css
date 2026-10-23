@@ -59,15 +59,9 @@ body[data-fuyukawa] .site-header {
       0 6px 18px rgba(82, 111, 140, 0.16);
   }
 
-  /* Hero 文案压在拼贴画上，小屏时补一层纸色底，保证可读 */
+  /* Hero 文案保持与宽屏一致的透明底，直接叠在拼贴画上。 */
   body[data-fuyukawa] .hero-copy {
-    padding: 16px 18px;
-    border: 1px solid rgba(255, 255, 255, 0.86);
-    border-radius: 18px;
-    background: linear-gradient(180deg, rgba(255, 250, 241, 0.9), rgba(255, 250, 241, 0.74));
-    box-shadow: 0 10px 28px rgba(82, 111, 140, 0.12);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    padding: 0;
   }
 }
 
@@ -157,10 +151,6 @@ body[data-fuyukawa] .site-header {
   /* 竖屏手机：贴纸、装饰字这类纯装饰元素在极窄屏上让位给内容 */
   body[data-fuyukawa] .home-art-word small {
     display: none;
-  }
-
-  body[data-fuyukawa] .hero-copy {
-    padding: 14px 16px;
   }
 }
 
@@ -263,16 +253,6 @@ body[data-fuyukawa] .site-header {
     height: 96%;
     object-fit: contain;
     object-position: right bottom;
-  }
-}
-
-/* 矮窗口（笔记本半屏、横屏平板）里 Hero 只有 600px 上下，
-   角色按原宽度缩放会顶到标题上，这一档把角色再缩小并压低。 */
-@media (min-width: 981px) and (max-height: 700px) {
-  body[data-fuyukawa] .manga-scene-camera .manga-scene-front {
-    width: 46%;
-    height: 82%;
-    bottom: 12px;
   }
 }
 

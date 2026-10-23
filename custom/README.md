@@ -6,12 +6,13 @@
 custom/
 ├─ site.config.ts     站点名、标题、简介、作者、关键词、导航、配色、功能开关、域名
 ├─ profile.ts         头像、昵称、简介、社交链接、技术栈、番剧 / 偏好 / 游戏清单、近况
-├─ images.ts          品牌图、背景、图标、404 插图、封面裁切焦点、漫画图替换
+├─ images.ts          品牌图、背景、图标、封面裁切焦点、漫画图替换
 ├─ assets/            放你自己的图片（构建时自动同步到 /custom/）
 └─ content/
    ├─ notice.ts       首页公告、节日彩蛋、随机文案
    ├─ projects.ts     Works 页的项目与技术线
-   └─ games.ts        Games 页的游戏推荐
+   ├─ games.ts        Games 页的游戏推荐
+   └─ tagRain.ts      首页标签雨的标签、配色、数量和性能档位
 ```
 
 ---
@@ -69,7 +70,6 @@ brand: "https://example.com/logo.png",       // 也可以直接外链
 | `heroWallpaper` | 文章无封面时的兜底 | 同时作为默认分享图 |
 | `pageBackground` | 全站背景 | 大图 |
 | `favicon` / `appleTouchIcon` | 标签页、iOS 主屏 | 图标 |
-| `notFound` | 404 页 | 插图 |
 
 首页的漫画主视觉（`hero-character`、`hero-manga` 等）用 `mangaOverrides`：
 
@@ -131,6 +131,17 @@ export const features = {
 - `content/notice.ts`：首页公告的节日、节气、冷知识、随机文案。结构是 `festivals` / `solarTerms2026` / `histories` / `fallbackThemes` / `fallbackActions` / `v50`，照着现有条目加就行。
 - `content/projects.ts`：Works 页项目列表与技术线。
 - `content/games.ts`：Games 页推荐游戏（记得保留原作者、许可证、仓库链接，页面上会展示）。
+
+### 6.1 改标签雨
+
+`content/tagRain.ts` 管首页标签雨：
+
+- `labels` / `palette`：下落标签与五组配色。
+- `tags.spritePad`：胶囊阴影/旋转的留白；不要小于 20。
+- `pigs`：小猪尺寸与图片留白。
+- `motion.limits`：各档位最多几个标签、几个小猪。默认桌面 20/3、触摸 14/2、lite 10/2。
+- `motion.dpr`：各档位画布像素密度。默认桌面 1.35、触摸 1.1、lite 1。
+- `motion.maxFps`：桌面 60、触摸 90（60Hz 屏实际仍为 60，90Hz 屏可到 90）；低于 60 的值会被提升到 60，避免 rAF 退化成 30。
 
 ## 7. 改域名
 
